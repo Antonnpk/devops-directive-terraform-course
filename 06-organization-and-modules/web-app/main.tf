@@ -2,9 +2,9 @@ terraform {
   # Assumes s3 bucket and dynamo DB table already set up
   # See /code/03-basics/aws-backend
   backend "s3" {
-    bucket         = "devops-directive-tf-state"
+    bucket         = "tf-state-backend-dev-test"
     key            = "06-organization-and-modules/web-app/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-central-1"
     dynamodb_table = "terraform-state-locking"
     encrypt        = true
   }
@@ -12,13 +12,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.46.0"
     }
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-central-1"
 }
 
 variable "db_pass_1" {
@@ -27,18 +27,18 @@ variable "db_pass_1" {
   sensitive   = true
 }
 
-variable "db_pass_2" {
-  description = "password for database #2"
-  type        = string
-  sensitive   = true
-}
+#variable "db_pass_2" {
+#  description = "password for database #2"
+#  type        = string
+#  sensitive   = true
+#}
 
 module "web_app_1" {
   source = "../web-app-module"
 
   # Input Variables
   bucket_prefix    = "web-app-1-data"
-  domain           = "devopsdeployed.com"
+  domain           = "antnasap.eu"
   app_name         = "web-app-1"
   environment_name = "production"
   instance_type    = "t2.micro"
@@ -48,17 +48,17 @@ module "web_app_1" {
   db_pass          = var.db_pass_1
 }
 
-module "web_app_2" {
-  source = "../web-app-module"
+#module "web_app_2" {
+#  source = "../web-app-module"
 
   # Input Variables
-  bucket_prefix    = "web-app-2-data"
-  domain           = "anotherdevopsdeployed.com"
-  app_name         = "web-app-2"
-  environment_name = "production"
-  instance_type    = "t2.micro"
-  create_dns_zone  = true
-  db_name          = "webapp2db"
-  db_user          = "bar"
-  db_pass          = var.db_pass_2
-}
+#  bucket_prefix    = "web-app-2-data"
+#  domain           = "anotherdevopsdeployed.com"
+#  app_name         = "web-app-2"
+#  environment_name = "production"
+#  instance_type    = "t2.micro"
+#  create_dns_zone  = true
+#  db_name          = "webapp2db"
+#  db_user          = "bar"
+#  db_pass          = var.db_pass_2
+#}
