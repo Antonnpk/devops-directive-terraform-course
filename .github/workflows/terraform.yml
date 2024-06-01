@@ -40,8 +40,7 @@ jobs:
         run: exit 1
 
 
-      - name: Terraform Apply Production
-        if: steps.check-tag.outputs.environment == 'production' && github.event_name == 'release'
+      - name: Terraform Apply
         run: |
           terraform init
           terraform apply -var db_pass_1=${{secrets.DB_PASS }} -auto-approve
